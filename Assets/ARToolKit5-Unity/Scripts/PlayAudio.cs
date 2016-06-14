@@ -9,10 +9,6 @@ public class PlayAudio : MonoBehaviour {
 
 	private AudioSource audio1;
 	private AudioSource audio2;
-	private AudioSource audio3;
-	private AudioSource audio4;
-	private AudioSource audio5;
-	private AudioSource audio6;
 
 	private ARMarker[] markers;
 
@@ -36,10 +32,7 @@ public class PlayAudio : MonoBehaviour {
 		arOrigin = this.gameObject.GetComponentInParent<AROrigin>();
 		audio1 = GameObject.FindGameObjectWithTag("arAudio1").GetComponent<AudioSource>();
 		audio2 = GameObject.FindGameObjectWithTag("arAudio2").GetComponent<AudioSource>();
-		audio3 = GameObject.FindGameObjectWithTag("arAudio3").GetComponent<AudioSource>();
-		audio4 = GameObject.FindGameObjectWithTag("arAudio4").GetComponent<AudioSource>();
-		audio5 = GameObject.FindGameObjectWithTag("arAudio5").GetComponent<AudioSource>();
-		audio6 = GameObject.FindGameObjectWithTag("arAudio6").GetComponent<AudioSource>();
+
 
 		markers = FindObjectsOfType(typeof(ARMarker)) as ARMarker[];
 		foreach (ARMarker m in markers) {
@@ -59,53 +52,39 @@ public class PlayAudio : MonoBehaviour {
 
 		AudioSource theAudio = null; 
 		if (marker.Tag == markersTags[0]) {
-			audio5.loop = true;
-			theAudio = audio5;
+			audio1.loop = true;
+			theAudio = audio1;
 		} else if (marker.Tag == markersTags[1]) {
-			audio5.loop = true;
-			theAudio = audio6;
+			audio2.loop = true;
+			theAudio = audio2;
 		} else if (marker.Tag == markersTags[2]) {
-			audio3.loop = true;
-			theAudio = audio3;
+			audio1.GetComponent<SEF_lowpass> ().enabled = true;
+			audio2.GetComponent<SEF_lowpass> ().enabled = true;
 		} else if (marker.Tag == markersTags[3]) {
-			audio4.loop = true;
-			theAudio = audio4;
+			audio1.GetComponent<SEF_highpass> ().enabled = true;
+			audio2.GetComponent<SEF_highpass> ().enabled = true;
 		}
 
-		//firstPlayAudio = true;
-		theAudio.Play ();
+		if (theAudio != null)
+			theAudio.Play ();
 
-		//oThread = new Thread(new ThreadStart(() => baseAudioDelay(Delay + delay)));
-
-		///// teste /////
-		//theAudio.UnPause();
-		//playAudio = false;
-		//firstPlayAudio = false;
-		////////
-
-		//oThread.Start();
-		//while (!oThread.IsAlive);
 	}
 
 	void OnMarkerLost(ARMarker marker){
 		if (marker.Tag == markersTags[0]) {
 			markersFX[0].SetActive (false);
-			audio5.Pause();
+			audio1.Pause();
 		} else if (marker.Tag == markersTags[1]) {
 			markersFX[1].SetActive (false);
-			audio6.Pause();
+			audio2.Pause();
 		} else if (marker.Tag == markersTags[2]) {
-			markersFX[2].SetActive (false);
-			audio3.Pause();
+			audio1.GetComponent<SEF_lowpass> ().enabled = false;
+			audio2.GetComponent<SEF_lowpass> ().enabled = false;
 		} else if (marker.Tag == markersTags[3]) {
-			markersFX[3].SetActive (false);
-			audio4.Pause();
+			audio1.GetComponent<SEF_highpass> ().enabled = false;
+			audio2.GetComponent<SEF_highpass> ().enabled = false;
 		}
-
-		//if (oThread != null) {
-			//oThread.Abort ();
-			//while (oThread.IsAlive);
-		//}
+			
 	}
 
 	void OnMarkerTracked(ARMarker marker){
@@ -114,23 +93,26 @@ public class PlayAudio : MonoBehaviour {
 
 		Vector3 normalPosition = new Vector3 (positionTarget.x / (0.5f * positionTarget.z), positionTarget.y / (0.5f * positionTarget.z), markersFX[0].transform.localPosition.z);
 
-
+		int lowCutoffvalue = (int)(((normalPosition.x + 0.9) / 1.8) * 4900) + 100;
+		int highCutoffvalue = (int)(((normalPosition.x + 0.9) / 1.8) * 1495) + 5;
 		AudioSource theAudio = null; 
 		if (marker.Tag == markersTags[0]) {
-			theAudio = audio5;
+			theAudio = audio1;
 			markersFX[0].SetActive (true);
 			markersFX[0].transform.localPosition = normalPosition;
 		} else if (marker.Tag == markersTags[1]) {
-			theAudio = audio6;
+			theAudio = audio2;
 			markersFX[1].SetActive (true);
 			markersFX[1].transform.localPosition = normalPosition;
 		} else if (marker.Tag == markersTags[2]) {
-			markersFX[2].SetActive (true);
-			markersFX[2].transform.localPosition = normalPosition;
+			audio1.GetComponent<SEF_lowpass> ().cutoffFrequency = lowCutoffvalue;
+			audio2.GetComponent<SEF_lowpass> ().cutoffFrequency = lowCutoffvalue;
 		} else if (marker.Tag == markersTags[3]) {
-			markersFX[3].SetActive (true);
-			markersFX[3].transform.localPosition = normalPosition;
+			audio1.GetComponent<SEF_highpass> ().cutoffFrequency = highCutoffvalue;
+			audio2.GetComponent<SEF_highpass> ().cutoffFrequency = highCutoffvalue;
 		}
+
+
 
 		if (theAudio != null) {
 			
@@ -156,36 +138,10 @@ public class PlayAudio : MonoBehaviour {
 
 
 
-
-
-
 	// Update is called once per frame
 	void Update () {   
 	}
-
-	public void baseAudioDelay(int firstDelay){
-		while (true) {
-			if (firstPlayAudio) {
-				wait(firstDelay);
-				firstPlayAudio = false;
-				playAudio = true;
-			}
-			wait(Delay);
-			playAudio = true;
-		}
-	}
-
-	private static void wait(int milliseconds)
-	{
-		DateTime dt = DateTime.Now + TimeSpan.FromMilliseconds(milliseconds);
-
-		do { } while (DateTime.Now < dt);
-	}
-
-	private int calcDelay(float pos, float max)
-	{
-		return (int)Math.Round(((Delay)*pos)/max);
-	}	
+		
 		
 }
 
