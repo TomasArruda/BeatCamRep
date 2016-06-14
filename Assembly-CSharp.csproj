@@ -67,9 +67,17 @@
      <Compile Include="Assets\ARToolKit5-Unity\Scripts\ARUtilityFunctions.cs" />
      <Compile Include="Assets\ARToolKit5-Unity\Scripts\PlayAudio.cs" />
      <Compile Include="Assets\ARToolKit5-Unity\Scripts\PluginFunctions.cs" />
+     <Compile Include="Assets\Complete Sound Suite\Sound Effect\SEF_Equalizer.cs" />
+     <Compile Include="Assets\Complete Sound Suite\Sound Effect\SEF_biquad.cs" />
+     <Compile Include="Assets\Complete Sound Suite\Sound Effect\SEF_delay.cs" />
+     <Compile Include="Assets\Complete Sound Suite\Sound Effect\SEF_highpass.cs" />
+     <Compile Include="Assets\Complete Sound Suite\Sound Effect\SEF_lowpass.cs" />
+     <Compile Include="Assets\Complete Sound Suite\Sound Effect\SEF_reverb.cs" />
+     <Compile Include="Assets\Complete Sound Suite\Sound Effect\SEF_tremolo.cs" />
      <None Include="Assets\ARToolKit5-Unity\Resources\ardata\markers\pat1.txt" />
      <None Include="Assets\Plugins\Android\AndroidManifest.xml" />
      <None Include="Assets\ARToolKit5-Unity\CHANGELOG.txt" />
+     <None Include="Assets\Complete Sound Suite\Sound Effect\help.txt" />
      <None Include="Assets\ARToolKit5-Unity\Resources\ardata\markers\patt.kanji.txt" />
      <None Include="Assets\ARToolKit5-Unity\Resources\Shaders\VideoPlaneNoLight.shader" />
      <None Include="Assets\ARToolKit5-Unity\Resources\ardata\markers\pat2.txt" />

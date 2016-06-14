@@ -12,6 +12,12 @@ TagManager:
   - arAudio2
   - arAudio3
   - arAudio4
+  - arAudio5
+  - arAudio6
+  - arAudio7
+  - arAudio8
+  - arAudio9
+  - arAudio10
   layers:
   - Default
   - TransparentFX
