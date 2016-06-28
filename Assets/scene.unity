@@ -4836,6 +4836,7 @@ GameObject:
   - 114: {fileID: 1676149199}
   - 114: {fileID: 1676149198}
   - 114: {fileID: 1676149197}
+  - 168: {fileID: 1676149201}
   m_Layer: 0
   m_Name: AudioSource1
   m_TagString: arAudio1
@@ -4943,7 +4944,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1676149193}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 342523879d55e483e977042c9450d69e, type: 3}
   m_Name: 
@@ -4994,6 +4995,17 @@ MonoBehaviour:
   lowFreq: 1
   midFreq: 1
   highFreq: 1
+--- !u!168 &1676149201
+AudioEchoFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1676149193}
+  m_Enabled: 0
+  m_Delay: 500
+  m_DecayRatio: 0.5
+  m_WetMix: 1
+  m_DryMix: 1
 --- !u!1 &1717020994
 GameObject:
   m_ObjectHideFlags: 0

@@ -19,11 +19,6 @@ public class PlayAudio : MonoBehaviour {
 	private GameObject myARObject;
 	private ARController myARController;
 
-	Thread oThread;
-
-	private int baseDelay = 1500;
-	private int Delay = 1500;
-
 	private bool playAudio = false;
 	private bool firstPlayAudio = false;
 
@@ -49,14 +44,14 @@ public class PlayAudio : MonoBehaviour {
 
 	//These are our new methods
 	void OnMarkerFound(ARMarker marker){
-
 		AudioSource theAudio = null; 
 		if (marker.Tag == markersTags[0]) {
 			audio1.loop = true;
 			theAudio = audio1;
 		} else if (marker.Tag == markersTags[1]) {
-			audio2.loop = true;
-			theAudio = audio2;
+			audio1.GetComponent<AudioEchoFilter> ().enabled = true;
+			//audio2.loop = true;
+			//theAudio = audio2;
 		} else if (marker.Tag == markersTags[2]) {
 			audio1.GetComponent<SEF_lowpass> ().enabled = true;
 			audio2.GetComponent<SEF_lowpass> ().enabled = true;
@@ -75,8 +70,9 @@ public class PlayAudio : MonoBehaviour {
 			markersFX[0].SetActive (false);
 			audio1.Pause();
 		} else if (marker.Tag == markersTags[1]) {
-			markersFX[1].SetActive (false);
-			audio2.Pause();
+			audio1.GetComponent<AudioEchoFilter> ().enabled = false;
+			//markersFX[1].SetActive (false);
+			//audio2.Pause();
 		} else if (marker.Tag == markersTags[2]) {
 			audio1.GetComponent<SEF_lowpass> ().enabled = false;
 			audio2.GetComponent<SEF_lowpass> ().enabled = false;
@@ -90,7 +86,6 @@ public class PlayAudio : MonoBehaviour {
 	void OnMarkerTracked(ARMarker marker){
 			
 		Vector3 positionTarget = ARUtilityFunctions.PositionFromMatrix(marker.TransformationMatrix);
-
 		Vector3 normalPosition = new Vector3 (positionTarget.x / (0.5f * positionTarget.z), positionTarget.y / (0.5f * positionTarget.z), markersFX[0].transform.localPosition.z);
 
 		int lowCutoffvalue = (int)(((normalPosition.x + 0.9) / 1.8) * 4900) + 100;
@@ -101,9 +96,11 @@ public class PlayAudio : MonoBehaviour {
 			markersFX[0].SetActive (true);
 			markersFX[0].transform.localPosition = normalPosition;
 		} else if (marker.Tag == markersTags[1]) {
-			theAudio = audio2;
-			markersFX[1].SetActive (true);
-			markersFX[1].transform.localPosition = normalPosition;
+			audio1.GetComponent<AudioEchoFilter> ().delay = 30;
+			audio1.GetComponent<AudioEchoFilter> ().decayRatio = 0.7f;
+			//theAudio = audio2;
+			//markersFX[1].SetActive (true);
+			//markersFX[1].transform.localPosition = normalPosition;
 		} else if (marker.Tag == markersTags[2]) {
 			audio1.GetComponent<SEF_lowpass> ().cutoffFrequency = lowCutoffvalue;
 			audio2.GetComponent<SEF_lowpass> ().cutoffFrequency = lowCutoffvalue;
@@ -115,13 +112,18 @@ public class PlayAudio : MonoBehaviour {
 
 
 		if (theAudio != null) {
-			
+			float pitch = 0;
 			if (normalPosition.x > -0.3f && normalPosition.x < 0.3f) {
-				theAudio.pitch = 1f;
+				pitch = 1f;
+				if (audio1.GetComponent<AudioEchoFilter> ().enabled)
+					pitch = 0.9f;
+				theAudio.pitch = pitch;
 			} else if (normalPosition.x > -0.9f && normalPosition.x < -0.3f) {
-				theAudio.pitch = 0.7f;
+				pitch = 0.7f;
+				theAudio.pitch = pitch;
 			} else if (normalPosition.x > 0.3f && normalPosition.x < 0.9f) {
-				theAudio.pitch = 1.4f;
+				pitch = 1.4f;
+				theAudio.pitch = pitch;
 			}
 
 			if (normalPosition.y > -0.2f && normalPosition.y < 0.2f) {
